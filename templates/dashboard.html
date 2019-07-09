@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Gianna's Dash</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
+</head>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+   <img src= '/static/about_equinox.png' width="200"  enlarge=True>
+   <nav class="navbar navbar-expand-sm navbar-collapse bg-dark" id="mainNav">
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="/dashboard">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">DASH</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Rundeck</a>
+        </li>
+        <li class="breadcrumb-item active">Dash</li>
+      </ol>
+      <div class="row">
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-primary o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Admin</h4>
+              <div class="mr-5"><h4>{{ad_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{ad_fails}}</h4> Failures</div>
+            </div>
+            {% if ad_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-warning o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Jarvis</h4>
+              <div class="mr-5"><h4>{{j_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{j_fails}}</h4> Failures</div>
+            </div>
+            {% if j_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-success o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Kraken</h4>
+              <div class="mr-5"><h4>{{k_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{k_fails}}</h4> Failures</div>
+            </div>
+            {% if k_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-secondary o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Perry</h4>
+              <div class="mr-5"><h4>{{p_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{p_fails}}</h4> Failures</div>
+            </div>
+            {% if p_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{perry[0]}}{{perry[1]}}{{perry[2]}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-danger o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Cache Jobs</h4>
+              <div class="mr-5"><h4>{{cache_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{cache_fails}}</h4> Failures</div>
+            </div>
+            {% if cache_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- row 2 cards-->
+      <div class="row">
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-primary o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">App Integrations</h4>
+              <div class="mr-5"><h4>{{app_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{app_fails}}</h4> Failures</div>
+            </div>
+            {% if app_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-warning o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Member Profile</h4>
+              <div class="mr-5"><h4>{{mp_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{mp_fails}}</h4> Failures</div>
+            </div>
+            {% if mp_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-success o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Deployment</h4>
+              <div class="mr-5"><h4>{{d_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{d_fails}}</h4> Failures</div>
+            </div>
+            {% if d_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-secondary o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Business Systems</h4>
+              <div class="mr-5"><h4>{{bus_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{bus_fails}}</h4> Failures</div>
+            </div>
+            {% if bus_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-2 col-sm-8 mb-3">
+          <div class="card text-white bg-danger o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">Jarvis Blink</h4>
+              <div class="mr-5"><h4>{{jb_runs}}</h4> executions today</div>
+              <div class="mr-5"><h4>{{jb_fails}}</h4> Failures</div>
+            </div>
+            {% if jb_fails %}
+            <a class="card-footer text-white clearfix">
+              <div class="mr-5"><span>most common failures:</span></div>
+              <div><span>{{list_fails}}</span></div>
+            </a>
+            {% endif %}
+          </div>
+      </div>    
+    </div>
+  </div>
+      <!-- row of charts after-->
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-bar-chart"></i> Revenue Chart</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-8 my-auto">
+                  <canvas id="myBarChart" width="100" height="50"></canvas>
+                </div>
+                <div class="col-sm-4 text-center my-auto">
+                  <div class="h4 mb-0 text-primary">$34,693</div>
+                  <div class="small text-muted">YTD Revenue</div>
+                  <hr>
+                  <div class="h4 mb-0 text-warning">$18,474</div>
+                  <div class="small text-muted">YTD Expenses</div>
+                  <hr>
+                  <div class="h4 mb-0 text-success">$16,219</div>
+                  <div class="small text-muted">YTD Margin</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <!-- Example Notifications Card-->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-bell-o"></i> Message Feed</div>
+            <div class="list-group list-group-flush small">
+              <div id="message-box">
+                <a class="list-group-item list-group-item-action" href="#">
+                  <div class="media">
+                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="">
+                    <div class="media-body">
+                      <strong>Jeffery Wellings</strong>added a new photo to the album
+                      <strong>Beach</strong>.
+                      <div class="text-muted smaller">Today at 4:31 PM - 1hr ago</div>
+                    </div>
+                  </div>
+                </a>
+                <a class="list-group-item list-group-item-action" href="#">
+                  <div class="media">
+                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="">
+                    <div class="media-body">
+                      <i class="fa fa-code-fork"></i>
+                      <strong>Monica Dennis</strong>forked the
+                      <strong>startbootstrap-sb-admin</strong>repository on
+                      <strong>GitHub</strong>.
+                      <div class="text-muted smaller">Today at 3:54 PM - 2hrs ago</div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <a class="list-group-item list-group-item-action" href="#">View all activity...</a>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+        </div>
+      </div>
+      <!-- Example DataTables Card-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i>Recent Jobs</div>
+        <div class="card-body">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="table">
+                <tr>
+                  <td>{{ proj[0] }}</td>
+                  <td>{{ stat[0] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[1] }}</td>
+                  <td>{{ stat[1] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[2] }}</td>
+                  <td>{{ stat[2] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[3] }}</td>
+                  <td>{{ stat[3] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[4] }}</td>
+                  <td>{{ stat[4] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[5] }}</td>
+                  <td>{{ stat[5] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ proj[6] }}</td>
+                  <td>{{ stat[6] }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        <div class="card-footer small text-muted">Updated just now</div>
+      </div>
+    </div>
+
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © Your Website 2018</small>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Page level plugin JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/customer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/order.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/message.js') }}"></script>
+  </div>
+</body>
+</html>
