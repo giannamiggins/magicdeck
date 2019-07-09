@@ -12,12 +12,13 @@ pipeline {
     options {
         skipDefaultCheckout false
     }
+    stages {
         stage('Build') {
             when {
                 branch 'master'
             }
             steps {
-                echo 'Build docker image for magicdeck'
+                echo 'Build docker image for teletraan1'
                 sh 'dck=$(aws ecr get-login --no-include-email --region us-east-1) && eval "$dck"'
 
                 withCredentials([[
@@ -32,15 +33,15 @@ pipeline {
                         usernameVariable: 'USERNAME',
                         passwordVariable: 'PASSWORD'
                     ]]) {
-                        sh 'docker build -t magicdeck --build-arg git_username=${USERNAME} --build-arg git_password=${PASSWORD} --build-arg aws_access_key_id=${AWS_ACCESS_KEY_ID} --build-arg aws_secret_access_key=${AWS_SECRET_ACCESS_KEY} --no-cache "${WORKSPACE}"/.'
+                        sh 'docker build -t teletraan1 --build-arg git_username=${USERNAME} --build-arg git_password=${PASSWORD} --build-arg aws_access_key_id=${AWS_ACCESS_KEY_ID} --build-arg aws_secret_access_key=${AWS_SECRET_ACCESS_KEY} --no-cache "${WORKSPACE}"/.'
                     }
                 }
-                sh 'docker tag magicdeck:latest 813561490937.dkr.ecr.us-east-1.amazonaws.com/magicdeck:latest'
-                sh 'docker push 813561490937.dkr.ecr.us-east-1.amazonaws.com/magicdeck:latest'
+                sh 'docker tag teletraan1:latest 813561490937.dkr.ecr.us-east-1.amazonaws.com/teletraan1:latest'
+                sh 'docker push 813561490937.dkr.ecr.us-east-1.amazonaws.com/teletraan1:latest'
 
                 echo 'Cleanup docker'
-                sh 'docker rmi magicdeck:latest'
-                sh 'docker rmi 813561490937.dkr.ecr.us-east-1.amazonaws.com/magicdeck:latest'
+                sh 'docker rmi teletraan1:latest'
+                sh 'docker rmi 813561490937.dkr.ecr.us-east-1.amazonaws.com/teletraan1:latest'
             }
         }
         stage('Tag') {
@@ -69,16 +70,16 @@ pipeline {
             }
             steps {
                 echo "Deploying to production-services cluster"
-                sh 'aws ecs update-service --cluster Production-Services --service magicdeck --force-new-deployment'
+                sh 'aws ecs update-service --cluster Production-Services --service teletraan1 --force-new-deployment'
             }
         }
     }
     post {
         failure {
-            slackSend (color: 'danger', message: "magicdeck_${GIT_BRANCH} - Build #${BUILD_NUMBER} Failed. (<${env.BUILD_URL}|Open>)")
+            slackSend (color: 'danger', message: "teletraan1_${GIT_BRANCH} - Build #${BUILD_NUMBER} Failed. (<${env.BUILD_URL}|Open>)")
         }
         success {
-            slackSend (color: 'good', message: "magicdeck_${GIT_BRANCH} - Build #${BUILD_NUMBER} Success. (<${env.BUILD_URL}|Open>)")
+            slackSend (color: 'good', message: "teletraan1_${GIT_BRANCH} - Build #${BUILD_NUMBER} Success. (<${env.BUILD_URL}|Open>)")
         }
         always {
             // Docker creates files that is named under root user
