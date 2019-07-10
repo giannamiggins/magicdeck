@@ -4,16 +4,15 @@ MAINTAINER Will Liu <will.liu@equinox.com>
 WORKDIR /usr/local/magicdeck
 
 # dependency install
-    RUN apk update && \
-    apk upgrade && \
-    apk add git && \
-    apk add build-base && \
-    apk add postgresql-dev
+    RUN yum -y install epel-release && \
+    yum -y install python-pip && \
+    yum -y install git && \
+    yum -y install postgresql-devel && \
+    yum -y install python-devel
 
 # Install aws-cli
     RUN pip install --upgrade pip && \
-    pip install awscli && \
-    rm /var/cache/apk/*
+    pip install awscli
 
 # build arguments
     ARG aws_access_key_id
@@ -39,10 +38,10 @@ WORKDIR /usr/local/magicdeck
     aws s3 cp s3://eqxdl-prod-support/magicdeck/credentials.py /usr/local/magicdeck/credentials.py
 
 # time zone setting
-    RUN apk add --no-cache tzdata && \
-        cp /usr/share/zoneinfo/America/New_York /etc/localtime
+    RUN mv /etc/localtime /etc/localtime_UTC && \
+    ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 
 EXPOSE 5000
 
 WORKDIR /usr/local/teletraan1
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "2", "teletraan1:APP"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "2", "app:app"]
