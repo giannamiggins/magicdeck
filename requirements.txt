@@ -2,3 +2,4 @@ Flask==1.1.1
 Flask-SQLAlchemy==2.4.0
 psycopg2==2.8.3
 pusher==2.1.3
+gunicorn==19.9.0
