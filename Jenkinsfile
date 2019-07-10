@@ -44,26 +44,6 @@ pipeline {
                 sh 'docker rmi 813561490937.dkr.ecr.us-east-1.amazonaws.com/magicdeck:latest'
             }
         }
-        stage('Tag') {
-            when {
-                branch 'master'
-            }
-            steps {
-                // Setup aws cli credentials
-                withAWS(credentials:'35a6c45c-5c20-467e-aae3-3bdbb1030ec3') {
-                    // Download versioning.sh from s3 bucket
-                    s3Download(file: 'versioning.sh', bucket: 'eqxdl-prod-support', path: 'jenkins_scripts/versioning.sh', force:true)
-                }
-
-                // Configure git inside docker container so we can access git cli commands
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'c4d13238-6129-40c3-b3c4-bbe6e35cb1b6', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-                    // Initialize tagging script'
-                    sh 'cat ./versioning.sh'
-                    sh 'chmod +x ./versioning.sh'
-                    sh './versioning.sh'
-                }
-            }
-        }
         stage('Production Deploy') {
             when {
                 branch 'master'
