@@ -1,4 +1,4 @@
-FROM python:3.6.5-alpine
+FROM centos:7
 MAINTAINER Will Liu <will.liu@equinox.com>
 
 WORKDIR /usr/local/magicdeck
