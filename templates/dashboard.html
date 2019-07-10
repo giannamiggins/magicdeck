@@ -6,33 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Gianna's Dash</title>
+  <title>Magic Deck</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
 </head>
-<body class="fixed-nav sticky-footer bg-dark" id="page-top">
-   <img src= '/static/about_equinox.png' width="200"  enlarge=True>
-   <nav class="navbar navbar-expand-sm navbar-collapse bg-dark" id="mainNav">
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-          <a class="nav-link" href="/dashboard">
-            <i class="fa fa-fw fa-dashboard"></i>
-            <span class="nav-link-text">DASH</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+<body id="page-top">
+  <nav class= "navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav"></nav>
   <div class="content-wrapper">
     <div class="container-fluid">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <a href="#">Rundeck</a>
         </li>
-        <li class="breadcrumb-item active">Dash</li>
+        <li class="breadcrumb-item active">Magic Deck</li>
       </ol>
       <div class="row">
         <div class="col-xl-2 col-sm-8 mb-3">
@@ -44,8 +32,7 @@
             </div>
             {% if ad_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -59,8 +46,7 @@
             </div>
             {% if j_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -74,8 +60,7 @@
             </div>
             {% if k_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -89,8 +74,7 @@
             </div>
             {% if p_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{perry[0]}}{{perry[1]}}{{perry[2]}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -104,8 +88,7 @@
             </div>
             {% if cache_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -122,8 +105,7 @@
             </div>
             {% if app_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -137,8 +119,7 @@
             </div>
             {% if mp_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -152,8 +133,7 @@
             </div>
             {% if d_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -167,8 +147,7 @@
             </div>
             {% if bus_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -182,8 +161,7 @@
             </div>
             {% if jb_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>most common failures:</span></div>
-              <div><span>{{list_fails}}</span></div>
+              <div class="mr-5"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -191,107 +169,69 @@
     </div>
   </div>
       <!-- row of charts after-->
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="card mb-3">
-            <div class="card-header">
-              <i class="fa fa-bar-chart"></i> Revenue Chart</div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-8 my-auto">
-                  <canvas id="myBarChart" width="100" height="50"></canvas>
-                </div>
-                <div class="col-sm-4 text-center my-auto">
-                  <div class="h4 mb-0 text-primary">$34,693</div>
-                  <div class="small text-muted">YTD Revenue</div>
-                  <hr>
-                  <div class="h4 mb-0 text-warning">$18,474</div>
-                  <div class="small text-muted">YTD Expenses</div>
-                  <hr>
-                  <div class="h4 mb-0 text-success">$16,219</div>
-                  <div class="small text-muted">YTD Margin</div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <!-- Example Notifications Card-->
-          <div class="card mb-3">
-            <div class="card-header">
-              <i class="fa fa-bell-o"></i> Message Feed</div>
-            <div class="list-group list-group-flush small">
-              <div id="message-box">
-                <a class="list-group-item list-group-item-action" href="#">
-                  <div class="media">
-                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="">
-                    <div class="media-body">
-                      <strong>Jeffery Wellings</strong>added a new photo to the album
-                      <strong>Beach</strong>.
-                      <div class="text-muted smaller">Today at 4:31 PM - 1hr ago</div>
-                    </div>
-                  </div>
-                </a>
-                <a class="list-group-item list-group-item-action" href="#">
-                  <div class="media">
-                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/45x45" alt="">
-                    <div class="media-body">
-                      <i class="fa fa-code-fork"></i>
-                      <strong>Monica Dennis</strong>forked the
-                      <strong>startbootstrap-sb-admin</strong>repository on
-                      <strong>GitHub</strong>.
-                      <div class="text-muted smaller">Today at 3:54 PM - 2hrs ago</div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <a class="list-group-item list-group-item-action" href="#">View all activity...</a>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-          </div>
-        </div>
-      </div>
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i>Recent Jobs</div>
+          <i class="fa fa-table"></i>Recently Failed Jobs</div>
         <div class="card-body">
             <table class="table table-bordered" width="100%" cellspacing="0">
               <thead>
                 <tr>
                   <th>Project</th>
+                  <th>Job Name</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody id="table">
                 <tr>
-                  <td>{{ proj[0] }}</td>
-                  <td>{{ stat[0] }}</td>
+                  <td>{{ job[0][0] }}</td>
+                  <td>{{ job[0][1] }}</td>
+                  <td>{{ job[0][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[1] }}</td>
-                  <td>{{ stat[1] }}</td>
+                  <td>{{ job[1][0] }}</td>
+                  <td>{{ job[1][1] }}</td>
+                  <td>{{ job[1][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[2] }}</td>
-                  <td>{{ stat[2] }}</td>
+                  <td>{{ job[2][0] }}</td>
+                  <td>{{ job[2][1] }}</td>
+                  <td>{{ job[2][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[3] }}</td>
-                  <td>{{ stat[3] }}</td>
+                  <td>{{ job[3][0] }}</td>
+                  <td>{{ job[3][1] }}</td>
+                  <td>{{ job[3][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[4] }}</td>
-                  <td>{{ stat[4] }}</td>
+                  <td>{{ job[4][0] }}</td>
+                  <td>{{ job[4][1] }}</td>
+                  <td>{{ job[4][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[5] }}</td>
-                  <td>{{ stat[5] }}</td>
+                  <td>{{ job[5][0] }}</td>
+                  <td>{{ job[5][1] }}</td>
+                  <td>{{ job[5][2] }}</td>
                 </tr>
                 <tr>
-                  <td>{{ proj[6] }}</td>
-                  <td>{{ stat[6] }}</td>
+                  <td>{{ job[6][0] }}</td>
+                  <td>{{ job[6][1] }}</td>
+                  <td>{{ job[6][2] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ job[7][0] }}</td>
+                  <td>{{ job[7][1] }}</td>
+                  <td>{{ job[7][2] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ job[8][0] }}</td>
+                  <td>{{ job[8][1] }}</td>
+                  <td>{{ job[8][2] }}</td>
+                </tr>
+                <tr>
+                  <td>{{ job[9][0] }}</td>
+                  <td>{{ job[9][1] }}</td>
+                  <td>{{ job[9][2] }}</td>
                 </tr>
               </tbody>
             </table>
@@ -303,7 +243,7 @@
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright © Your Website 2018</small>
+          <small>Copyright © EquinoxFitness 2019</small>
         </div>
       </div>
     </footer>
