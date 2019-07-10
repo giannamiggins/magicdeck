@@ -47,5 +47,5 @@ WORKDIR /usr/local/magicdeck
 
 EXPOSE 5000
 
-WORKDIR /usr/local/teletraan1
+WORKDIR /usr/local/magicdeck
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "2", "app:app"]
