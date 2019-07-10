@@ -8,7 +8,11 @@ WORKDIR /usr/local/magicdeck
     yum -y install python-pip && \
     yum -y install git && \
     yum -y install postgresql-devel && \
-    yum -y install python-devel
+    yum -y install python-devel && \
+    yum -y install gcc && \
+    yum -y install libffi-devel && \
+    yum -y install openssl-devel && \
+    yum -y install libffi-devel openssl-devel
 
 # Install aws-cli
     RUN pip install --upgrade pip && \
