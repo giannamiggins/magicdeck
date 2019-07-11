@@ -1,6 +1,6 @@
-# Build a Realtime Dashboard With Python and Pusher
+# Rundeck Dashboard With Python and Pusher
 
-This is a demo application showing how to build a realtime dashboard using [Python](https://www.python.org/) and [Pusher](https://pusher.com/). You can read about how it was created on [Pusher's blog](https://pusher.com/tutorials/live-dashboard-python).
+Uses Rundeck database to display job failures for each project
 
 ## Getting Started
 
@@ -19,15 +19,17 @@ What things you need to install the software.
 Clone the git repository on your computer
 
 ```
-$ git clone https://github.com/neoighodaro/pusher-python-realtime-dashboard
+$ git clone https://github.com/equinoxfitness/magicdeck.git
 ```
 
 You can also download the entire repository as a zip file and unpack in on your computer if you do not have git
 
-After cloning the application, you need to install it's dependencies.
-
+After cloning the application, you need to install it's dependencies from requirements.txt and set up a virtual environment.
+Credentials file should have url for database: 'postgres+psycopg2://username:password@host/databasename
+   and optional pusher login information
+ 
 ```
-$ cd pusher-python-realtime-dashboard
+$ cd magicdeck
 $ pip install flask
 $ pip install pusher
 $ python dbsetup.py```
