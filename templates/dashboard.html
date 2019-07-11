@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Magic Deck</title>
+  <title>Gianna's Dash</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -24,15 +24,15 @@
       </ol>
       <div class="row">
         <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-primary o-hidden h-100"> 
+          <div class="card text-white bg-info o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Admin</h4>
-              <div class="mr-5"><h4>{{ad_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{ad_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{ad_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{ad_fails}}</h4> Failures</div>
             </div>
             {% if ad_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -41,12 +41,12 @@
           <div class="card text-white bg-warning o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Jarvis</h4>
-              <div class="mr-5"><h4>{{j_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{j_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{j_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{j_fails}}</h4> Failures</div>
             </div>
             {% if j_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -55,12 +55,12 @@
           <div class="card text-white bg-success o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Kraken</h4>
-              <div class="mr-5"><h4>{{k_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{k_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{k_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{k_fails}}</h4> Failures</div>
             </div>
             {% if k_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -69,12 +69,12 @@
           <div class="card text-white bg-secondary o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Perry</h4>
-              <div class="mr-5"><h4>{{p_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{p_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{p_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{p_fails}}</h4> Failures</div>
             </div>
             {% if p_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -83,12 +83,12 @@
           <div class="card text-white bg-danger o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Cache Jobs</h4>
-              <div class="mr-5"><h4>{{cache_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{cache_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{cache_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{cache_fails}}</h4> Failures</div>
             </div>
             {% if cache_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -97,15 +97,15 @@
       <!-- row 2 cards-->
       <div class="row">
         <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-primary o-hidden h-100"> 
+          <div class="card text-white bg-info o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">App Integrations</h4>
-              <div class="mr-5"><h4>{{app_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{app_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{app_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{app_fails}}</h4> Failures</div>
             </div>
             {% if app_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -114,12 +114,12 @@
           <div class="card text-white bg-warning o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Member Profile</h4>
-              <div class="mr-5"><h4>{{mp_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{mp_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{mp_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{mp_fails}}</h4> Failures</div>
             </div>
             {% if mp_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -128,12 +128,12 @@
           <div class="card text-white bg-success o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Deployment</h4>
-              <div class="mr-5"><h4>{{d_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{d_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{d_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{d_fails}}</h4> Failures</div>
             </div>
             {% if d_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -142,12 +142,12 @@
           <div class="card text-white bg-secondary o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Business Systems</h4>
-              <div class="mr-5"><h4>{{bus_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{bus_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{bus_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{bus_fails}}</h4> Failures</div>
             </div>
             {% if bus_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -156,12 +156,12 @@
           <div class="card text-white bg-danger o-hidden h-100"> 
             <div class="card-body">
               <h4 class="card-header text-center text-dark text-bold">Jarvis Blink</h4>
-              <div class="mr-5"><h4>{{jb_runs}}</h4> executions today</div>
-              <div class="mr-5"><h4>{{jb_fails}}</h4> Failures</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{jb_runs}}</h4> executions today</div>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{jb_fails}}</h4> Failures</div>
             </div>
             {% if jb_fails %}
             <a class="card-footer text-white clearfix">
-              <div class="mr-5"><span>Failed Jobs listed below</span></div>
+              <div class="mr-5 text-dark"><span>Failed Jobs listed below</span></div>
             </a>
             {% endif %}
           </div>
@@ -169,12 +169,47 @@
     </div>
   </div>
       <!-- row of charts after-->
+      <!-- number fails per job in the past week-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table" style='color:red'></i>   Most Frequently Failed Jobs This Week</div>
+        <div class="card-body">
+            <table class="table table-bordered" width="90%" cellspacing="0">
+              <col width="100">
+              <col width="80">
+              <col width="150">
+              <col width="150">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Job Name</th>
+                  <th>Status</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody id="table">
+                {% for k in counts %}
+                <tr>
+                  <td>{{ k[0] }}</td>
+                  <td>{{ k[1] }}</td>
+                  <td>{{ k[2] }}</td>
+                  <td>{{ k[3] }}</td>
+                </tr>  
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        <div class="card-footer small text-muted">Updated just now</div>
+      </div>
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i>Recently Failed Jobs</div>
+          <i class="fa fa-table"></i>   Recently Failed Jobs</div>
         <div class="card-body">
             <table class="table table-bordered" width="100%" cellspacing="0">
+              <col width="100">
+              <col width="80">
+              <col width="150">
               <thead>
                 <tr>
                   <th>Project</th>
@@ -183,56 +218,13 @@
                 </tr>
               </thead>
               <tbody id="table">
+                {% for x in job %}
                 <tr>
-                  <td>{{ job[0][0] }}</td>
-                  <td>{{ job[0][1] }}</td>
-                  <td>{{ job[0][2] }}</td>
+                  <td>{{ x[0] }}</td>
+                  <td>{{ x[1] }}</td>
+                  <td>{{ x[2] }}</td>
                 </tr>
-                <tr>
-                  <td>{{ job[1][0] }}</td>
-                  <td>{{ job[1][1] }}</td>
-                  <td>{{ job[1][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[2][0] }}</td>
-                  <td>{{ job[2][1] }}</td>
-                  <td>{{ job[2][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[3][0] }}</td>
-                  <td>{{ job[3][1] }}</td>
-                  <td>{{ job[3][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[4][0] }}</td>
-                  <td>{{ job[4][1] }}</td>
-                  <td>{{ job[4][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[5][0] }}</td>
-                  <td>{{ job[5][1] }}</td>
-                  <td>{{ job[5][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[6][0] }}</td>
-                  <td>{{ job[6][1] }}</td>
-                  <td>{{ job[6][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[7][0] }}</td>
-                  <td>{{ job[7][1] }}</td>
-                  <td>{{ job[7][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[8][0] }}</td>
-                  <td>{{ job[8][1] }}</td>
-                  <td>{{ job[8][2] }}</td>
-                </tr>
-                <tr>
-                  <td>{{ job[9][0] }}</td>
-                  <td>{{ job[9][1] }}</td>
-                  <td>{{ job[9][2] }}</td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

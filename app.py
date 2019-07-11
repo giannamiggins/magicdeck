@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from pusher import Pusher
-from sqlalchemy import Column, String, Date, Integer, cast, func
+from sqlalchemy import Column, String, Date, Integer, cast, func, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 from sqlalchemy import create_engine, Table, MetaData, text
@@ -82,11 +82,34 @@ jb_fails = session.query(fails).filter_by(project='Jarvis-Blink').count()
 
 job = session.query(Execution.project, Jobs.job_name, Execution.status).filter(Execution.scheduled_execution_id == Jobs.id).filter_by(status='failed').order_by(Execution.date_completed.desc()).limit(10)
 
+query = text("""
+select project,job_name,status,count(*) from
+
+(SELECT
+exe.project,
+se.job_name,
+exe.status
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed >= CURRENT_DATE -6
+) as his
+
+where status = 'failed'
+group by status, job_name, project
+order by count DESC
+limit(10)
+""")
+counts = engine.execute(query)
+failcount = []
+for x in counts:
+    failcount.append(x)
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html', ad_runs=ad_runs, ad_fails=ad_fails, j_runs=j_runs, j_fails=j_fails, k_runs=k_runs, k_fails=k_fails, 
 	p_runs=p_runs, p_fails=p_fails, cache_runs=cache_runs, cache_fails=cache_fails, app_runs=app_runs, app_fails=app_fails, mp_runs=mp_runs, 
-	mp_fails=mp_fails, d_runs=d_runs, d_fails=d_fails, bus_runs=bus_runs, bus_fails=bus_fails, jb_runs=jb_runs, jb_fails=jb_fails, job=job)
+	mp_fails=mp_fails, d_runs=d_runs, d_fails=d_fails, bus_runs=bus_runs, bus_fails=bus_fails, jb_runs=jb_runs, jb_fails=jb_fails, job=job, counts=failcount)
 
 if __name__ == '__main__':
 	app.run(debug=True)
