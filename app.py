@@ -105,11 +105,26 @@ failcount = []
 for x in counts:
     failcount.append(x)
 
+query2 = text("""
+SELECT 
+       exe.date_started,
+       exe.project,
+       se.job_name
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed is null
+order by date_started desc
+""")
+ongoing = engine.execute(query2)
+running = []
+for y in ongoing:
+    running.append(y)
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html', ad_runs=ad_runs, ad_fails=ad_fails, j_runs=j_runs, j_fails=j_fails, k_runs=k_runs, k_fails=k_fails, 
 	p_runs=p_runs, p_fails=p_fails, cache_runs=cache_runs, cache_fails=cache_fails, app_runs=app_runs, app_fails=app_fails, mp_runs=mp_runs, 
-	mp_fails=mp_fails, d_runs=d_runs, d_fails=d_fails, bus_runs=bus_runs, bus_fails=bus_fails, jb_runs=jb_runs, jb_fails=jb_fails, job=job, counts=failcount)
+	mp_fails=mp_fails, d_runs=d_runs, d_fails=d_fails, bus_runs=bus_runs, bus_fails=bus_fails, jb_runs=jb_runs, jb_fails=jb_fails, job=job, counts=failcount, running=running)
 
 if __name__ == '__main__':
 	app.run(debug=True)
