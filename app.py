@@ -153,18 +153,6 @@ for y in ongoing:
 def dashboard():
     return render_template('dashboard.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
 
-@app.route('/qa')
-def qa():
-    return render_template('qa.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
-
-@app.route('/stag')
-def qa():
-    return render_template('stag.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
-
-@app.route('/test')
-def qa():
-    return render_template('test.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
-
 
 if __name__ == '__main__':
 	app.run(debug=True)
