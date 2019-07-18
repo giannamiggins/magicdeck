@@ -24,6 +24,7 @@ class Execution(Base):
     status = Column(String)
     date_completed = Column(Date)
     scheduled_execution_id = Column(Integer)
+    execution_type = Column(String)
 
     def __init__(self, id, project, status, date_completed, scheduled_execution_id):
         self.id = id
@@ -31,6 +32,7 @@ class Execution(Base):
         self.status = status
         self.date_completed = date_completed
         self.scheduled_execution_id = scheduled_execution_id
+        self.execution_type = execution_type
 
 class Jobs(Base):
     __tablename__ = "scheduled_execution"
@@ -55,34 +57,41 @@ secret=credentials.secret,
 cluster=credentials.cluster,
 ssl=True)
 
-#sql variables
-allprojects = session.query(Execution.project).filter(cast(Execution.date_completed, Date)==date.today()).subquery()
-fails = session.query(Execution.project).filter_by(status='failed').filter(cast(Execution.date_completed, Date)==date.today()).subquery()
 
-ad_runs = session.query(allprojects).filter_by(project='Admin').count()
-ad_fails = session.query(fails).filter_by(project='Admin').count()
-j_runs = session.query(allprojects).filter_by(project='Jarvis').count()
-j_fails = session.query(fails).filter_by(project='Jarvis').count()
-k_runs = session.query(allprojects).filter_by(project='Kraken').count()
-k_fails = session.query(fails).filter_by(project='Kraken').count()
-p_runs = session.query(allprojects).filter_by(project='Perry').count()
-p_fails = session.query(fails).filter_by(project='Perry').count()
-cache_runs = session.query(allprojects).filter_by(project='Cache_Jobs').count()
-cache_fails = session.query(fails).filter_by(project='Cache_Jobs').count()
-app_runs = session.query(allprojects).filter_by(project='App-Integrations').count()
-app_fails = session.query(fails).filter_by(project='App-Integrations').count()
-mp_runs = session.query(allprojects).filter_by(project='MemberProfile').count()
-mp_fails = session.query(fails).filter_by(project='MemberProlie').count()
-d_runs = session.query(allprojects).filter_by(project='Deployment').count()
-d_fails = session.query(fails).filter_by(project='Deployment').count()
-bus_runs = session.query(allprojects).filter_by(project='BusinessSystems').count()
-bus_fails = session.query(fails).filter_by(project='BusinessSystems').count()
-jb_runs = session.query(allprojects).filter_by(project='Jarvis-Blink').count()
-jb_fails = session.query(fails).filter_by(project='Jarvis-Blink').count()
+job = session.query(Execution.project, Jobs.job_name, Execution.status, Execution.execution_type).filter(Execution.scheduled_execution_id == Jobs.id).filter_by(status='failed').order_by(Execution.date_completed.desc()).limit(10)
 
-job = session.query(Execution.project, Jobs.job_name, Execution.status).filter(Execution.scheduled_execution_id == Jobs.id).filter_by(status='failed').order_by(Execution.date_completed.desc()).limit(10)
+query = text("""select project, count (*)
+from public.execution
+where date_completed >= CURRENT_DATE
+group by execution.project
+""")
+titles = engine.execute(query)
+executions = []
+for y in titles:
+    executions.append(y)
 
-query = text("""
+query2 = text("""select project, count (*)
+from public.execution
+where status='failed' and date_completed >= CURRENT_DATE
+group by execution.project
+""")
+
+faillist = engine.execute(query2)
+failures = []
+for k in faillist:
+    failures.append(k)
+
+#build url
+g = 0
+host = "devops"
+
+while g < len(failures):
+    project = failures[g][0]
+    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
+    failures[g] = failures[g], url
+    g += 1
+
+query3 = text("""
 select project,job_name,status,count(*) from
 
 (SELECT
@@ -100,12 +109,29 @@ group by status, job_name, project
 order by count DESC
 limit(10)
 """)
-counts = engine.execute(query)
+counts = engine.execute(query3)
 failcount = []
 for x in counts:
     failcount.append(x)
 
-query2 = text("""
+query4 = text("""
+select date_completed, count(*)
+from (
+select CAST(date_completed as date)
+from public.execution
+where status = 'failed' 
+and date_completed >= CURRENT_DATE - 6
+group by execution.date_completed
+)as x
+group by x.date_completed
+order by count desc
+""")
+days = engine.execute(query4)
+week = []
+for k in days:
+    week.append(k)
+
+query6 = text("""
 SELECT 
        exe.date_started,
        exe.project,
@@ -115,16 +141,30 @@ join public.execution exe on exe.scheduled_execution_id=se.id
 where exe.date_completed is null
 order by date_started desc
 """)
-ongoing = engine.execute(query2)
+ongoing = engine.execute(query6)
 running = []
 for y in ongoing:
     running.append(y)
 
+
+
+
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html', ad_runs=ad_runs, ad_fails=ad_fails, j_runs=j_runs, j_fails=j_fails, k_runs=k_runs, k_fails=k_fails, 
-	p_runs=p_runs, p_fails=p_fails, cache_runs=cache_runs, cache_fails=cache_fails, app_runs=app_runs, app_fails=app_fails, mp_runs=mp_runs, 
-	mp_fails=mp_fails, d_runs=d_runs, d_fails=d_fails, bus_runs=bus_runs, bus_fails=bus_fails, jb_runs=jb_runs, jb_fails=jb_fails, job=job, counts=failcount, running=running)
+    return render_template('dashboard.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
+
+@app.route('/qa')
+def qa():
+    return render_template('qa.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
+
+@app.route('/stag')
+def qa():
+    return render_template('stag.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
+
+@app.route('/test')
+def qa():
+    return render_template('test.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
+
 
 if __name__ == '__main__':
 	app.run(debug=True)

@@ -12,8 +12,41 @@
   <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/sb-admin.css') }}" rel="stylesheet">
 </head>
-<body id="page-top">
-  <nav class= "navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav"></nav>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand text-white"> Equinox MagicDeck</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="/dashboard">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Production</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="qa">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">QA</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="/stag">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Staging</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="/test">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Testing</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <div class="content-wrapper">
     <div class="container-fluid">
       <ol class="breadcrumb">
@@ -23,153 +56,41 @@
         <li class="breadcrumb-item active">Magic Deck</li>
       </ol>
       <div class="row">
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-info o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Admin</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{ad_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{ad_fails}}</h4> Failures</div>
-            </div>
-            {% if ad_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Admin/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-warning o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Jarvis</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{j_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{j_fails}}</h4> Failures</div>
-            </div>
-            {% if j_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Jarvis/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-success o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Kraken</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{k_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{k_fails}}</h4> Failures</div>
-            </div>
-            {% if k_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Kraken/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-secondary o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Perry</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{p_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{p_fails}}</h4> Failures</div>
-            </div>
-            {% if p_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Perry/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
+      {% for m in failures %}
+      {% if m[0][1] > 0 %}
+        {% for g in titles %}
+         {% if g[0] == m[0][0] %}
+         <div class="col-xl-2 col-sm-2 mb-3">
           <div class="card text-white bg-danger o-hidden h-100"> 
             <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Cache Jobs</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{cache_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{cache_fails}}</h4> Failures</div>
+              <h4 class="card-header text-center text-dark text-bold">{{ g[0]  }}</h4>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  g[1]  }}</h4> executions today</div>
+              
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  m[0][1]  }}</h4> Failures today</div>
             </div>
-            {% if cache_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Cache_Jobs/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
+                <a href={{ m[1] }}>
+                <div class="card-footer text-center text-dark"><span>more information</span></div>
+                </a>
+          </div>
+                {% endif %}
+              {% endfor %}
             {% endif %}
+        </div>  
+        {% endfor %}
+        <div class="col-lg-2 col-sm-2 mb-3">
+          <div class="card bg-info o-hidden h-100"> 
+            <div class="card-body">
+              <h4 class="card-header text-center text-dark text-bold">This Week</h4>
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  week[0][0]  }}</h4> had the most failures</div>
+              
+              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  week[0][1]  }}</h4> Failures </div>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- row 2 cards-->
-      <div class="row">
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-info o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">App Integrations</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{app_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{app_fails}}</h4> Failures</div>
-            </div>
-            {% if app_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/App-Integrations/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-warning o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Member Profile</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{mp_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{mp_fails}}</h4> Failures</div>
-            </div>
-            {% if mp_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/MemberProfile/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-success o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Deployment</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{d_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{d_fails}}</h4> Failures</div>
-            </div>
-            {% if d_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Deployment/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-secondary o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Business Systems</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{bus_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{bus_fails}}</h4> Failures</div>
-            </div>
-            {% if bus_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/BusinessSystems/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xl-2 col-sm-8 mb-3">
-          <div class="card text-white bg-danger o-hidden h-100"> 
-            <div class="card-body">
-              <h4 class="card-header text-center text-dark text-bold">Jarvis Blink</h4>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{jb_runs}}</h4> executions today</div>
-              <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{jb_fails}}</h4> Failures</div>
-            </div>
-            {% if jb_fails %}
-            <a href=http://devops.equinoxfitness.com/rundeck/project/Jarvis-Blink/activity?statFilter=fail>
-              <div class="card-footer text-center text-dark"><span>Failed Jobs listed below</span></div>
-            </a>
-            {% endif %}
-          </div>
-      </div>    
     </div>
   </div>
       <!-- row of charts after-->
-      <!-- current;y running jobs-->
+      <!-- currently running jobs-->
     <div class="row">
       <div class="col-lg-4">
       <div class="card mb-3">
@@ -179,7 +100,6 @@
             <table class="table table-bordered" width="90%" cellspacing="0">
               <col width="100">
               <col width="80">
-              <col width="150">
               <col width="150">
               <thead>
                 <tr>
@@ -244,12 +164,14 @@
             <table class="table table-bordered" width="100%" cellspacing="0">
               <col width="100">
               <col width="80">
-              <col width="150">
+              <col width="100">
+              <col width="50">
               <thead>
                 <tr>
                   <th>Project</th>
                   <th>Job Name</th>
                   <th>Status</th>
+                  <th>Execution Type</th>
                 </tr>
               </thead>
               <tbody id="table">
@@ -258,6 +180,7 @@
                   <td>{{ x[0] }}</td>
                   <td>{{ x[1] }}</td>
                   <td>{{ x[2] }}</td>
+                  <td>{{ x[3] }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
