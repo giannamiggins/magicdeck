@@ -1,65 +1,35 @@
 from flask import Flask, render_template, request
-from pusher import Pusher
 from sqlalchemy import Column, String, Date, Integer, cast, func, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, mapper
 from sqlalchemy import create_engine, Table, MetaData, text
 from datetime import date, timedelta
+import schedule 
 import credentials
 today = date.today()
 
 app = Flask(__name__)
+
 engine = create_engine(credentials.rundeckdb, echo=False)
-Base = declarative_base(engine)
+#recently failed jobs table
+query1 = text("""
+SELECT
+exe.project,
+se.job_name,
+exe.status,
+exe.execution_type
 
-metadata = Base.metadata
-Session = sessionmaker(bind=engine)
-session = Session()
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.status='failed'
+order by exe.date_completed desc
+limit 10 """)
+recents = engine.execute(query1)
+job = []
+for w in recents:
+    job.append(w)
 
-class Execution(Base):
-    __tablename__ = "execution"
-
-    id = Column(Integer, primary_key=True)
-    project = Column(String)
-    status = Column(String)
-    date_completed = Column(Date)
-    scheduled_execution_id = Column(Integer)
-    execution_type = Column(String)
-
-    def __init__(self, id, project, status, date_completed, scheduled_execution_id):
-        self.id = id
-        self.project = project
-        self.status = status
-        self.date_completed = date_completed
-        self.scheduled_execution_id = scheduled_execution_id
-        self.execution_type = execution_type
-
-class Jobs(Base):
-    __tablename__ = "scheduled_execution"
-
-    id = Column(Integer, primary_key=True)
-    project = Column(String)
-    job_name = Column(String)
-    last_updated = Column(String)
-
-    def __init__(self, id, project, job_name, last_updated):
-        self.id = id
-        self.project = project
-        self.job_name = job_name
-        self.last_updated = last_updated
-
-
-# configure pusher object
-pusher = Pusher(
-app_id=credentials.id,
-key=credentials.key,
-secret=credentials.secret,
-cluster=credentials.cluster,
-ssl=True)
-
-
-job = session.query(Execution.project, Jobs.job_name, Execution.status, Execution.execution_type).filter(Execution.scheduled_execution_id == Jobs.id).filter_by(status='failed').order_by(Execution.date_completed.desc()).limit(10)
-
+#number executions per project (card)
 query = text("""select project, count (*)
 from public.execution
 where date_completed >= CURRENT_DATE
@@ -70,27 +40,18 @@ executions = []
 for y in titles:
     executions.append(y)
 
+#number fails per project (card)
 query2 = text("""select project, count (*)
 from public.execution
 where status='failed' and date_completed >= CURRENT_DATE
 group by execution.project
 """)
-
 faillist = engine.execute(query2)
 failures = []
 for k in faillist:
     failures.append(k)
 
-#build url
-g = 0
-host = "devops"
-
-while g < len(failures):
-    project = failures[g][0]
-    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
-    failures[g] = failures[g], url
-    g += 1
-
+#number fails per job for the week table
 query3 = text("""
 select project,job_name,status,count(*) from
 
@@ -114,6 +75,7 @@ failcount = []
 for x in counts:
     failcount.append(x)
 
+#finds the day with the most failures
 query4 = text("""
 select date_completed, count(*)
 from (
@@ -131,6 +93,7 @@ week = []
 for k in days:
     week.append(k)
 
+#shows currently running jobs
 query6 = text("""
 SELECT 
        exe.date_started,
@@ -146,14 +109,362 @@ running = []
 for y in ongoing:
     running.append(y)
 
+#build prod url
+g = 0
+host = "devops"
+while g < len(failures):
+    project = failures[g][0]
+    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
+    failures[g] = failures[g], url
+    g += 1
+
+#-------------------------------------------------------------------------------------------
+engineqa = create_engine(credentials.qaurl, echo=False)
+#recently failed jobs table
+query1 = text("""
+SELECT
+exe.project,
+se.job_name,
+exe.status,
+exe.execution_type
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.status='failed'
+order by exe.date_completed desc
+limit 10 """)
+recents = engineqa.execute(query1)
+jobqa = []
+for w in recents:
+    jobqa.append(w)
+
+#number executions per project (card)
+query = text("""select project, count (*)
+from public.execution
+where date_completed >= CURRENT_DATE
+group by execution.project
+""")
+titles = engineqa.execute(query)
+executionsqa = []
+for y in titles:
+    executionsqa.append(y)
+
+#number fails per project (card)
+query2 = text("""select project, count (*)
+from public.execution
+where status='failed' and date_completed >= CURRENT_DATE
+group by execution.project
+""")
+faillist = engineqa.execute(query2)
+failuresqa = []
+for k in faillist:
+    failuresqa.append(k)
+
+#number fails per job for the week table
+query3 = text("""
+select project,job_name,status,count(*) from
+
+(SELECT
+exe.project,
+se.job_name,
+exe.status
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed >= CURRENT_DATE -6
+) as his
+
+where status = 'failed'
+group by status, job_name, project
+order by count DESC
+limit(10)
+""")
+counts = engineqa.execute(query3)
+failcountqa = []
+for x in counts:
+    failcountqa.append(x)
+
+#finds the day with the most failures
+query4 = text("""
+select date_completed, count(*)
+from (
+select CAST(date_completed as date)
+from public.execution
+where status = 'failed' 
+and date_completed >= CURRENT_DATE - 6
+group by execution.date_completed
+)as x
+group by x.date_completed
+order by count desc
+""")
+days = engineqa.execute(query4)
+weekqa = []
+for k in days:
+    weekqa.append(k)
+
+#shows currently running jobs
+query6 = text("""
+SELECT 
+       exe.date_started,
+       exe.project,
+       se.job_name
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed is null
+order by date_started desc
+""")
+ongoing = engineqa.execute(query6)
+runningqa = []
+for y in ongoing:
+    runningqa.append(y)
+
+#build qa url
+g = 0
+host = "qa-devops"
+while g < len(failuresqa):
+    project = failuresqa[g][0]
+    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
+    failuresqa[g] = failuresqa[g], url
+    g += 1
+
+#-------------------------------------------------------------------------------------------
+enginestag = create_engine(credentials.stagurl, echo=False)
+#recently failed jobs table
+query1 = text("""
+SELECT
+exe.project,
+se.job_name,
+exe.status,
+exe.execution_type
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.status='failed'
+order by exe.date_completed desc
+limit 10 """)
+recents = enginestag.execute(query1)
+jobstag = []
+for w in recents:
+    jobstag.append(w)
+
+#number executions per project (card)
+query = text("""select project, count (*)
+from public.execution
+where date_completed >= CURRENT_DATE
+group by execution.project
+""")
+titles = enginestag.execute(query)
+executionsstag = []
+for y in titles:
+    executionsstag.append(y)
+
+#number fails per project (card)
+query2 = text("""select project, count (*)
+from public.execution
+where status='failed' and date_completed >= CURRENT_DATE
+group by execution.project
+""")
+faillist = enginestag.execute(query2)
+failuresstag = []
+for k in faillist:
+    failuresstag.append(k)
+
+#number fails per job for the week table
+query3 = text("""
+select project,job_name,status,count(*) from
+
+(SELECT
+exe.project,
+se.job_name,
+exe.status
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed >= CURRENT_DATE -6
+) as his
+
+where status = 'failed'
+group by status, job_name, project
+order by count DESC
+limit(10)
+""")
+counts = enginestag.execute(query3)
+failcountstag = []
+for x in counts:
+    failcountstag.append(x)
+
+#finds the day with the most failures
+query4 = text("""
+select date_completed, count(*)
+from (
+select CAST(date_completed as date)
+from public.execution
+where status = 'failed' 
+and date_completed >= CURRENT_DATE - 6
+group by execution.date_completed
+)as x
+group by x.date_completed
+order by count desc
+""")
+days = enginestag.execute(query4)
+weekstag = []
+for k in days:
+    weekstag.append(k)
+
+#shows currently running jobs
+query6 = text("""
+SELECT 
+       exe.date_started,
+       exe.project,
+       se.job_name
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed is null
+order by date_started desc
+""")
+ongoing = enginestag.execute(query6)
+runningstag = []
+for y in ongoing:
+    runningstag.append(y)
+
+#build stag url
+g = 0
+host = "stag-devops"
+while g < len(failuresstag):
+    project = failuresstag[g][0]
+    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
+    failuresstag[g] = failuresstag[g], url
+    g += 1
+
+#-------------------------------------------------------------------------------------------
+enginetest = create_engine(credentials.testurl, echo=False)
+#recently failed jobs table
+query1 = text("""
+SELECT
+exe.project,
+se.job_name,
+exe.status,
+exe.execution_type
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.status='failed'
+order by exe.date_completed desc
+limit 10 """)
+recents = enginetest.execute(query1)
+jobtest = []
+for w in recents:
+    jobtest.append(w)
+
+#number executions per project (card)
+query = text("""select project, count (*)
+from public.execution
+where date_completed >= CURRENT_DATE
+group by execution.project
+""")
+titles = enginetest.execute(query)
+executionstest = []
+for y in titles:
+    executionstest.append(y)
+
+#number fails per project (card)
+query2 = text("""select project, count (*)
+from public.execution
+where status='failed' and date_completed >= CURRENT_DATE
+group by execution.project
+""")
+faillist = enginetest.execute(query2)
+failurestest = []
+for k in faillist:
+    failurestest.append(k)
+
+#number fails per job for the week table
+query3 = text("""
+select project,job_name,status,count(*) from
+
+(SELECT
+exe.project,
+se.job_name,
+exe.status
+
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed >= CURRENT_DATE -6
+) as his
+
+where status = 'failed'
+group by status, job_name, project
+order by count DESC
+limit(10)
+""")
+counts = enginetest.execute(query3)
+failcounttest = []
+for x in counts:
+    failcounttest.append(x)
+
+#finds the day with the most failures
+query4 = text("""
+select date_completed, count(*)
+from (
+select CAST(date_completed as date)
+from public.execution
+where status = 'failed' 
+and date_completed >= CURRENT_DATE - 6
+group by execution.date_completed
+)as x
+group by x.date_completed
+order by count desc
+""")
+days = enginetest.execute(query4)
+weektest = []
+for k in days:
+    weektest.append(k)
+
+#shows currently running jobs
+query6 = text("""
+SELECT 
+       exe.date_started,
+       exe.project,
+       se.job_name
+FROM public.scheduled_execution se
+join public.execution exe on exe.scheduled_execution_id=se.id
+where exe.date_completed is null
+order by date_started desc
+""")
+ongoing = enginetest.execute(query6)
+runningtest = []
+for y in ongoing:
+    runningtest.append(y)
+
+#build test url
+g = 0
+host = "test-devops"
+while g < len(failurestest):
+    project = failurestest[g][0]
+    url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
+    failurestest[g] = failurestest[g], url
+    g += 1
 
 
-
-@app.route('/dashboard')
+@app.route('/dashboard/prod')
 def dashboard():
+    engine = create_engine(credentials.rundeckdb, echo=False)
     return render_template('dashboard.html', titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week)
 
+@app.route('/dashboard/qa')
+def qa():
+    engine = create_engine(credentials.qaurl, echo=False)
+    return render_template('qa.html', titles=executionsqa, job=jobqa, counts=failcountqa, failures=failuresqa, running=runningqa, week=weekqa)
+
+@app.route('/dashboard/stag')
+def stag():
+    engine = create_engine(credentials.stagurl, echo=False)
+    return render_template('stag.html', titles=executionsstag, job=jobstag, counts=failcountstag, failures=failuresstag, running=runningstag, week=weekstag)
+
+@app.route('/dashboard/test')
+def test():
+    engine = create_engine(credentials.testurl, echo=False)
+    return render_template('test.html', titles=executionstest, job=jobtest, counts=failcounttest, failures=failurestest, running=runningtest, week=weektest)
 
 if __name__ == '__main__':
 	app.run(debug=True)
-    
