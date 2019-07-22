@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="refresh" content="15">  
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
@@ -117,10 +118,11 @@
     <div class="col-lg-2 col-sm-2 mb-3">
       <div class="card bg-info o-hidden h-100"> 
         <div class="card-body">
-          <h4 class="card-header text-center text-dark text-bold">This Week</h4>
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  week[0][0]  }}</h4> had the most failures</div>
-          
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold">{{  week[0][1]  }}</h4> Failures </div>
+          <h1 class="card-header text-center text-dark text-bold">This Week</h1>
+          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  week[0][0]  }} had {{ week[0][1] }} failures</h4></div>
+          <br>
+          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  length  }} / 7  days had failures</h4></div>
+          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> </h4></div>
         </div>
       </div>
     </div>
