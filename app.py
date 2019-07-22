@@ -1,12 +1,6 @@
 from flask import Flask, render_template, request
-from sqlalchemy import Column, String, Date, Integer, cast, func, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, mapper
-from sqlalchemy import create_engine, Table, MetaData, text
-from datetime import date, timedelta
-import schedule 
+from sqlalchemy import create_engine, text
 import credentials
-today = date.today()
 
 app = Flask(__name__)
 
