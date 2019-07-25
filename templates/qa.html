@@ -123,6 +123,8 @@
           <br>
           <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  length  }} / 7  days had failures</h4></div>
           <div class="mr-5 text-dark"><h4 class="font-weight-bold"> </h4></div>
+          <br>
+          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  over  }} jobs ran over their average runtime</h4></div>
         </div>
       </div>
     </div>
@@ -192,6 +194,44 @@
       </div>
     </div>
   </div>
+  <!-- Example DataTables Card-->
+    <div class="row">
+      <div class="col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i>   Jobs Running longer than Monthly Average Runtime</div>
+        <div class="card-body">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              <col width="150">
+              <col width="20">
+              <col width="150">
+              <col width="120">
+              <col width="100">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Job Name</th>
+                  <th>Date</th>
+                  <th>Runtime</th>
+                  <th>Average Runtime</th>
+                </tr>
+              </thead>
+              <tbody id="table">
+                {% for x in toolong %}
+                <tr>
+                  <td>{{ x[0] }}</td>
+                  <td>{{ x[1] }}</td>
+                  <td>{{ x[2] }}</td>
+                  <td>{{ x[3] }}</td>
+                  <td>{{ x[4] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+    </div>
     </div>
     <footer class="sticky-footer">
       <div class="container">

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from sqlalchemy import create_engine, text
 import credentials
+from runtime import toolong, over, toolongqa, overqa, toolongstag, overstag, toolongtest, overtest
 
 app = Flask(__name__)
 
@@ -117,7 +118,7 @@ def dashboard():
         failures[g] = failures[g], url
         g += 1
         
-    return render_template('dashboard.html', engine=engine, titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week, length=length)
+    return render_template('dashboard.html', over=over, toolong=toolong, engine=engine, titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week, length=length)
 
 @app.route('/dashboard/qa')
 def qa():
@@ -231,7 +232,7 @@ def qa():
         failuresqa[g] = failuresqa[g], url
         g += 1
 
-    return render_template('qa.html', titles=executionsqa, job=jobqa, counts=failcountqa, failures=failuresqa, running=runningqa, week=weekqa, length=lengthqa)
+    return render_template('qa.html', over=overqa, toolong=toolongqa, titles=executionsqa, job=jobqa, counts=failcountqa, failures=failuresqa, running=runningqa, week=weekqa, length=lengthqa)
 
 @app.route('/dashboard/stag')
 def stag():
@@ -345,7 +346,7 @@ def stag():
         failuresstag[g] = failuresstag[g], url
         g += 1
 
-    return render_template('stag.html', titles=executionsstag, job=jobstag, counts=failcountstag, failures=failuresstag, running=runningstag, week=weekstag, length=lengthstag)
+    return render_template('stag.html', over=overstag, toolong=toolongstag, titles=executionsstag, job=jobstag, counts=failcountstag, failures=failuresstag, running=runningstag, week=weekstag, length=lengthstag)
 
 @app.route('/dashboard/test')
 def test():
@@ -459,7 +460,7 @@ def test():
         failurestest[g] = failurestest[g], url
         g += 1
 
-    return render_template('test.html', titles=executionstest, job=jobtest, counts=failcounttest, failures=failurestest, running=runningtest, week=weektest, length=lengthtest)
+    return render_template('test.html', over=overtest, toolong=toolongtest, titles=executionstest, job=jobtest, counts=failcounttest, failures=failurestest, running=runningtest, week=weektest, length=lengthtest)
 
 if __name__ == '__main__':
 	app.run(debug=True)
