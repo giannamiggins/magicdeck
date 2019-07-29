@@ -37,7 +37,7 @@ while i < len(timing)-1:
     numprojects += 1
 
 query1 = text("""
-SELECT exe.project, se.job_name, exe.date_completed - exe.date_started, date_completed
+SELECT exe.project, se.job_name, exe.date_completed - exe.date_started, cast(date_completed as varchar(16))
 
 FROM public.scheduled_execution se
 join public.execution exe on exe.scheduled_execution_id=se.id
@@ -57,7 +57,7 @@ for g in weekcheck:
     for m in avgtable:
         if g[1] == m[0]:
             if g[2].total_seconds() > m[1]*5:
-                toolong.append([g[0], m[0], g[3], g[2].total_seconds(), m[1]])
+                toolong.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
 over = 1 
 j=0  
@@ -102,7 +102,7 @@ for g in weekcheckqa:
     for m in avgtableqa:
         if g[1] == m[0]:
             if g[2].total_seconds() > m[1]*5:
-                toolongqa.append([g[0], m[0], g[3], g[2].total_seconds(), m[1]])
+                toolongqa.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
 overqa = 1 
 j=0  
@@ -147,7 +147,7 @@ for g in weekcheckstag:
     for m in avgtablestag:
         if g[1] == m[0]:
             if g[2].total_seconds() > m[1]*5:
-                toolongstag.append([g[0], m[0], g[3], g[2].total_seconds(), m[1]])
+                toolongstag.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
 overstag = 1 
 j=0  
@@ -192,7 +192,7 @@ for g in weekchecktest:
     for m in avgtabletest:
         if g[1] == m[0]:
             if g[2].total_seconds() > m[1]*5:
-                toolongtest.append([g[0], m[0], g[3], g[2].total_seconds(), m[1]])
+                toolongtest.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
 overtest = 1 
 j=0  

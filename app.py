@@ -96,7 +96,7 @@ def dashboard():
     #shows currently running jobs
     query6 = text("""
     SELECT 
-        exe.date_started,
+        cast(exe.date_started as varchar(16)),
         exe.project,
         se.job_name
     FROM public.scheduled_execution se
@@ -210,7 +210,7 @@ def qa():
     #shows currently running jobs
     query6 = text("""
     SELECT 
-        exe.date_started,
+        cast(exe.date_started as varchar(16)),
         exe.project,
         se.job_name
     FROM public.scheduled_execution se
@@ -324,7 +324,7 @@ def stag():
     #shows currently running jobs
     query6 = text("""
     SELECT 
-        exe.date_started,
+        cast(exe.date_started as varchar(16)),
         exe.project,
         se.job_name
     FROM public.scheduled_execution se
@@ -438,7 +438,7 @@ def test():
     #shows currently running jobs
     query6 = text("""
     SELECT 
-        exe.date_started,
+        cast(exe.date_started as varchar(16)),
         exe.project,
         se.job_name
     FROM public.scheduled_execution se
