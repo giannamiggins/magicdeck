@@ -1,6 +1,8 @@
-# Rundeck Dashboard With Python and Flask using PostgreSQL database
+# Flask Rundeck Dashboard
 
 Uses Rundeck database to visually display live updates on failed jobs
+
+![FINSIHEDDASH](https://user-images.githubusercontent.com/49261430/62052769-2e5cbc00-b1e4-11e9-9fa8-ee709a77188d.PNG)
 
 ## Getting Started
 
@@ -40,9 +42,12 @@ $ pip install -r requirements.txt
 ```
 
 ## Example Credentials File
+must provide all four connections or delete unwanted create_engine statements in app.py and runtime.py
 ```
-rundeckdb = 'postgres+psycopg2://username:password@host/databasename'
-database2 = 'postgresql://username:password@host/databasename'
+produrl = 'postgres+psycopg2://username:password@host/databasename'
+qaurl = 'postgresql://username:password@host/databasename'
+stagurl = 'postgresql://username:password@host/databasename'
+testurl = 'postgresql://username:password@host/databasename'
 ```
 
 ## Run the application
@@ -53,5 +58,6 @@ $ flask run
 ```
 
 ## Built With
-* [Python](https://www.python.org/) - a programming language that lets you work quickly and integrate systems more effectively
-* [Flask](http://flask.pocoo.org/) - a microframework for Python based on Werkzeug, Jinja 2 and good intentions
+* [Python](https://www.python.org/) - an interpreted, high-level, general-purpose programming language
+* [Flask](http://flask.pocoo.org/) - a micro web framework written in Python based on Werkzeug and Jinja2 
+* [PostgreSQL](https://www.postgresql.org/) - the world's most advanced open source relational database
