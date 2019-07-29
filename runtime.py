@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 import credentials
-engine = create_engine(credentials.rundeckdb, echo=False)
+engine = create_engine(credentials.produrl, echo=False)
 
 query = text("""
 SELECT exe.project, se.job_name, exe.date_completed - exe.date_started, date_completed

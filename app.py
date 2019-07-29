@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/dashboard/prod')
 def dashboard():
-    engine = create_engine(credentials.rundeckdb, echo=False)
+    engine = create_engine(credentials.produrl, echo=False)
         
     #recently failed jobs table
     query1 = text("""
