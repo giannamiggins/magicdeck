@@ -57,6 +57,13 @@ $ set FLASK_APP=app
 $ flask run
 ```
 
+## Optional Hambot Dashboard
+add hambot database connection to credentials file
+```
+hambot = 'postgresql://username:password@host/databasename'
+```
+if you do not want to use this feature, simply leave out the hambot connection and the app will still run
+
 ## Built With
 * [Python](https://www.python.org/) - an interpreted, high-level, general-purpose programming language
 * [Flask](http://flask.pocoo.org/) - a micro web framework written in Python based on Werkzeug and Jinja2 
