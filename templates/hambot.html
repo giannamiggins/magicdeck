@@ -60,30 +60,42 @@
         <li class="breadcrumb-item">
           <a href="#">Rundeck</a>
         </li>
-        <li class="breadcrumb-item active">Magic Deck/ Testing</li>
+        <li class="breadcrumb-item active">Magic Deck/ Hambot</li>
       </ol>
       <div class="row">
-      {% for m in failures %}
-      {% if m[0][1] > 0 %}
-        {% for g in titles %}
-         {% if g[0] == m[0][0] %}
+      {% for a in both %}
          <div class="col-xl-3 col-sm-4 mb-3">
           <div class="card text-white bg-danger o-hidden h-100"> 
             <div class="card-body">
-              <h1 class="card-header text-center text-dark text-bold">{{ g[0]  }}</h1>
-              <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  g[1]  }}</h1><h3> Executions today</h3></div>
-              
-              <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  m[0][1]  }}</h1><h3> Failures today</h3></div>
+              <h1 class="card-header text-center text-dark text-bold">{{ a[0][0]  }}</h1>
+              <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  a[0][1]  }}</h1><h3> Failed tests today</h3></div>
+              <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  a[1][1]  }}</h1><h3> Warnings today</h3></div>
             </div>
-                <a href={{ m[1] }} target="_blank">
-                <div class="card-footer text-center text-dark">more information</div>
-                </a>
           </div>
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-        </div>  
+        </div>
         {% endfor %}
+        {% for a in fcards %}
+        <div class="col-xl-3 col-sm-4 mb-3">
+         <div class="card text-white bg-danger o-hidden h-100"> 
+           <div class="card-body">
+             <h1 class="card-header text-center text-dark text-bold">{{ a[0] }}</h1>
+             <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  a[1]  }}</h1><h3> Failed tests today</h3></div>
+             <div class="mr-5 text-dark"><h1 class="font-weight-bold"> 0 </h1><h3> Warnings today</h3></div>
+           </div>
+         </div>
+       </div>
+       {% endfor %}
+       {% for a in wcards %}
+       <div class="col-xl-3 col-sm-4 mb-3">
+        <div class="card text-white bg-warning o-hidden h-100"> 
+          <div class="card-body">
+            <h1 class="card-header text-center text-dark text-bold">{{ a[0]  }}</h1>
+            <div class="mr-5 text-dark"><h1 class="font-weight-bold"> 0 </h1><h3> Failed tests today</h3></div>
+            <div class="mr-5 text-dark"><h1 class="font-weight-bold">{{  a[1]  }}</h1><h3> Warnings today</h3></div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
       <!-- row of charts after-->
@@ -92,144 +104,34 @@
       <div class="col-lg-10">
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i>   Recently Failed Jobs</div>
+          <i class="fa fa-table"></i>   Hambot Runs</div>
         <div class="card-body">
             <table class="table table-bordered" width="100%" cellspacing="0">
               <col width="100">
-              <col width="80">
+              <col width="70">
               <col width="100">
+              <col width="50">
+              <col width="50">
               <col width="50">
               <thead>
                 <tr>
-                  <th>Project</th>
-                  <th>Job Name</th>
+                  <th>Manifest</th>
+                  <th>Test Name</th>
                   <th>Status</th>
-                  <th>Execution Type</th>
+                  <th>Environment</th>
+                  <th>Difference</th>
+                  <th>Time</th>
                 </tr>
               </thead>
               <tbody id="table">
-                {% for x in job %}
-                <tr>
-                  <td>{{ x[0] }}</td>
-                  <td>{{ x[1] }}</td>
-                  <td>{{ x[2] }}</td>
-                  <td>{{ x[3] }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-      </div>
-    </div>
-    <div class="col-lg-2 col-sm-2 mb-3">
-      <div class="card bg-info o-hidden h-100"> 
-        <div class="card-body">
-          <h1 class="card-header text-center text-dark text-bold">This Week</h1>
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  week[0][0]  }} had {{ week[0][1] }} failures</h4></div>
-          <br>
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  length  }} / 7  days had failures</h4></div>
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> </h4></div>
-          <br>
-          <div class="mr-5 text-dark"><h4 class="font-weight-bold"> * {{  over  }} jobs ran over their average runtime</h4></div>
-        </div>
-      </div>
-    </div>
-  </div>
-      <!-- currently running jobs-->
-    <div class="row">
-      <div class="col-lg-6">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fa fa-table" style='color:rgb(251, 255, 0)'></i>   Currently Running Jobs</div>
-        <div class="card-body">
-            <table class="table table-bordered" width="90%" cellspacing="0">
-              <col width="100">
-              <col width="80">
-              <col width="150">
-              <thead>
-                <tr>
-                  <th>Time Started</th>
-                  <th>Project</th>
-                  <th>Job Name</th>
-                </tr>
-              </thead>
-              <tbody id="table">
-                {% for y in running %}
-                <tr>
-                  <td>{{ y[0] }}</td>
-                  <td>{{ y[1] }}</td>
-                  <td>{{ y[2] }}</td>
-                </tr>  
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-      </div>
-      </div>
-      <!-- number fails per job in the past week-->
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fa fa-table" style='color:red'></i>   Most Frequently Failed Jobs This Week</div>
-        <div class="card-body">
-            <table class="table table-bordered" width="90%" cellspacing="0">
-              <col width="100">
-              <col width="80">
-              <col width="150">
-              <col width="150">
-              <thead>
-                <tr>
-                  <th>Project</th>
-                  <th>Job Name</th>
-                  <th>Status</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody id="table">
-                {% for k in counts %}
-                <tr>
-                  <td>{{ k[0] }}</td>
-                  <td>{{ k[1] }}</td>
-                  <td>{{ k[2] }}</td>
-                  <td>{{ k[3] }}</td>
-                </tr>  
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-      </div>
-    </div>
-  </div>
-<!-- Example DataTables Card-->
-    <div class="row">
-      <div class="col-lg-12">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fa fa-table"></i>   Jobs Running longer than Monthly Average Runtime</div>
-        <div class="card-body">
-            <table class="table table-bordered" width="100%" cellspacing="0">
-              <col width="150">
-              <col width="20">
-              <col width="150">
-              <col width="120">
-              <col width="100">
-              <thead>
-                <tr>
-                  <th>Project</th>
-                  <th>Job Name</th>
-                  <th>Date</th>
-                  <th>Runtime</th>
-                  <th>Average Runtime</th>
-                </tr>
-              </thead>
-              <tbody id="table">
-                {% for x in toolong %}
+                {% for x in table %}
                 <tr>
                   <td>{{ x[0] }}</td>
                   <td>{{ x[1] }}</td>
                   <td>{{ x[2] }}</td>
                   <td>{{ x[3] }}</td>
                   <td>{{ x[4] }}</td>
+                  <td>{{ x[5] }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -237,8 +139,10 @@
           </div>
       </div>
     </div>
-    </div>
-    </div>
+  </div>
+      <!-- currently running jobs-->
+        <!-- Example DataTables Card-->
+  </div>
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
