@@ -5,12 +5,8 @@ from runtime import toolong, over, toolongqa, overqa, toolongstag, overstag, too
 
 app = Flask(__name__)
 
-@app.route('/dashboard/prod')
-def dashboard():
-    engine = create_engine(credentials.produrl, echo=False)
-        
-    #recently failed jobs table
-    query1 = text("""
+#recently failed jobs table
+query1 = text("""
     SELECT
     exe.project,
     se.job_name,
@@ -22,35 +18,20 @@ def dashboard():
     where exe.status='failed'
     order by exe.date_completed desc
     limit 10 """)
-    recents = engine.execute(query1)
-    job = []
-    for w in recents:
-        job.append(w)
-
-    #number executions per project (card)
-    query = text("""select project, count (*)
+#number executions per project (card)
+query = text("""select project, count (*)
     from public.execution
     where date_completed >= CURRENT_DATE
     group by execution.project
     """)
-    titles = engine.execute(query)
-    executions = []
-    for y in titles:
-        executions.append(y)
-
-    #number fails per project (card)
-    query2 = text("""select project, count (*)
+ #number fails per project (card)
+query2 = text("""select project, count (*)
     from public.execution
     where status='failed' and date_completed >= CURRENT_DATE
     group by execution.project
     """)
-    faillist = engine.execute(query2)
-    failures = []
-    for k in faillist:
-        failures.append(k)
-
-    #number fails per job for the week table
-    query3 = text("""
+#number fails per job for the week table
+query3 = text("""
     select project,job_name,status,count(*) from
 
     (SELECT
@@ -68,13 +49,8 @@ def dashboard():
     order by count DESC
     limit(10)
     """)
-    counts = engine.execute(query3)
-    failcount = []
-    for x in counts:
-        failcount.append(x)
-
-    #finds the day with the most failures
-    query4 = text("""
+ #finds the day with the most failures
+query4 = text("""
     select date_completed, count(*)
     from (
     select CAST(date_completed as date)
@@ -86,15 +62,9 @@ def dashboard():
     group by x.date_completed
     order by count desc
     """)
-    days = engine.execute(query4)
-    week = []
-    for k in days:
-        week.append(k)
 
-    length = len(week)
-
-    #shows currently running jobs
-    query6 = text("""
+#shows currently running jobs
+query6 = text("""
     SELECT 
         cast(exe.date_started as varchar(16)),
         exe.project,
@@ -104,6 +74,88 @@ def dashboard():
     where exe.date_completed is null
     order by date_started desc
     """)
+
+@app.route('/dashboard/hambot')
+def hambot():
+    engine = create_engine(credentials.hambot, echo=False)
+    query = text("""select manifest, test, status, environment, diff, cast(created_time as varchar(16))
+    from public.hambot_history
+    where status != 'success'
+    and created_time >= current_date""")
+    table = []
+    all = engine.execute(query)
+    for x in all:
+        table.append(x)
+
+    query2 = text("""SELECT manifest,
+        count(*)
+        FROM public.hambot_history
+        where status = 'failure'
+        group by manifest
+        order by count desc""")
+    fcards = []
+    card = engine.execute(query2)
+    for y in card:
+        fcards.append(y)
+
+    query3 = text("""SELECT manifest,
+        count(*)
+        FROM public.hambot_history
+        where status = 'warning'
+        group by manifest
+        order by count desc""")
+    wcards = []
+    cards = engine.execute(query3)
+    for z in cards:
+        wcards.append(z)
+
+    both = []
+    for a in fcards:
+        for b in wcards:
+            if a[0] == b[0]:
+                both.append([a,b])
+                fcards.remove(a)
+                wcards.remove(b)
+    for a in fcards:
+        for b in wcards:
+            if a[0] == b[0]:
+                both.append([a,b])
+                fcards.remove(a)
+                wcards.remove(b)
+
+
+    return render_template('hambot.html', table=table, fcards=fcards, wcards=wcards, both=both)
+
+@app.route('/dashboard/prod')
+def dashboard():
+    engine = create_engine(credentials.produrl, echo=False)
+    recents = engine.execute(query1)
+    job = []
+    for w in recents:
+        job.append(w)
+
+    titles = engine.execute(query)
+    executions = []
+    for y in titles:
+        executions.append(y)
+
+    faillist = engine.execute(query2)
+    failures = []
+    for k in faillist:
+        failures.append(k)
+
+    counts = engine.execute(query3)
+    failcount = []
+    for x in counts:
+        failcount.append(x)
+
+    days = engine.execute(query4)
+    week = []
+    for k in days:
+        week.append(k)
+
+    length = len(week)
+
     ongoing = engine.execute(query6)
     running = []
     for y in ongoing:
@@ -123,83 +175,27 @@ def dashboard():
 @app.route('/dashboard/qa')
 def qa():
     engineqa = create_engine(credentials.qaurl, echo=False)
-    #recently failed jobs table
-    query1 = text("""
-    SELECT
-    exe.project,
-    se.job_name,
-    exe.status,
-    exe.execution_type
 
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.status='failed'
-    order by exe.date_completed desc
-    limit 10 """)
     recents = engineqa.execute(query1)
     jobqa = []
     for w in recents:
         jobqa.append(w)
 
-    #number executions per project (card)
-    query = text("""select project, count (*)
-    from public.execution
-    where date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     titles = engineqa.execute(query)
     executionsqa = []
     for y in titles:
         executionsqa.append(y)
 
-    #number fails per project (card)
-    query2 = text("""select project, count (*)
-    from public.execution
-    where status='failed' and date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     faillist = engineqa.execute(query2)
     failuresqa = []
     for k in faillist:
         failuresqa.append(k)
 
-    #number fails per job for the week table
-    query3 = text("""
-    select project,job_name,status,count(*) from
-
-    (SELECT
-    exe.project,
-    se.job_name,
-    exe.status
-
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed >= CURRENT_DATE -6
-    ) as his
-
-    where status = 'failed'
-    group by status, job_name, project
-    order by count DESC
-    limit(10)
-    """)
     counts = engineqa.execute(query3)
     failcountqa = []
     for x in counts:
         failcountqa.append(x)
 
-    #finds the day with the most failures
-    query4 = text("""
-    select date_completed, count(*)
-    from (
-    select CAST(date_completed as date)
-    from public.execution
-    where status = 'failed' 
-    and date_completed >= CURRENT_DATE - 6
-    group by execution.date_completed
-    )as x
-    group by x.date_completed
-    order by count desc
-    """)
     days = engineqa.execute(query4)
     weekqa = []
     for k in days:
@@ -207,17 +203,6 @@ def qa():
 
     lengthqa = len(weekqa)
 
-    #shows currently running jobs
-    query6 = text("""
-    SELECT 
-        cast(exe.date_started as varchar(16)),
-        exe.project,
-        se.job_name
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed is null
-    order by date_started desc
-    """)
     ongoing = engineqa.execute(query6)
     runningqa = []
     for y in ongoing:
@@ -237,83 +222,27 @@ def qa():
 @app.route('/dashboard/stag')
 def stag():
     enginestag = create_engine(credentials.stagurl, echo=False)
-    #recently failed jobs table
-    query1 = text("""
-    SELECT
-    exe.project,
-    se.job_name,
-    exe.status,
-    exe.execution_type
 
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.status='failed'
-    order by exe.date_completed desc
-    limit 10 """)
     recents = enginestag.execute(query1)
     jobstag = []
     for w in recents:
         jobstag.append(w)
 
-    #number executions per project (card)
-    query = text("""select project, count (*)
-    from public.execution
-    where date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     titles = enginestag.execute(query)
     executionsstag = []
     for y in titles:
         executionsstag.append(y)
 
-    #number fails per project (card)
-    query2 = text("""select project, count (*)
-    from public.execution
-    where status='failed' and date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     faillist = enginestag.execute(query2)
     failuresstag = []
     for k in faillist:
         failuresstag.append(k)
 
-    #number fails per job for the week table
-    query3 = text("""
-    select project,job_name,status,count(*) from
-
-    (SELECT
-    exe.project,
-    se.job_name,
-    exe.status
-
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed >= CURRENT_DATE -6
-    ) as his
-
-    where status = 'failed'
-    group by status, job_name, project
-    order by count DESC
-    limit(10)
-    """)
     counts = enginestag.execute(query3)
     failcountstag = []
     for x in counts:
         failcountstag.append(x)
 
-    #finds the day with the most failures
-    query4 = text("""
-    select date_completed, count(*)
-    from (
-    select CAST(date_completed as date)
-    from public.execution
-    where status = 'failed' 
-    and date_completed >= CURRENT_DATE - 6
-    group by execution.date_completed
-    )as x
-    group by x.date_completed
-    order by count desc
-    """)
     days = enginestag.execute(query4)
     weekstag = []
     for k in days:
@@ -321,17 +250,6 @@ def stag():
 
     lengthstag = len(weekstag)
 
-    #shows currently running jobs
-    query6 = text("""
-    SELECT 
-        cast(exe.date_started as varchar(16)),
-        exe.project,
-        se.job_name
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed is null
-    order by date_started desc
-    """)
     ongoing = enginestag.execute(query6)
     runningstag = []
     for y in ongoing:
@@ -351,83 +269,27 @@ def stag():
 @app.route('/dashboard/test')
 def test():
     enginetest = create_engine(credentials.testurl, echo=False)
-    #recently failed jobs table
-    query1 = text("""
-    SELECT
-    exe.project,
-    se.job_name,
-    exe.status,
-    exe.execution_type
 
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.status='failed'
-    order by exe.date_completed desc
-    limit 10 """)
     recents = enginetest.execute(query1)
     jobtest = []
     for w in recents:
         jobtest.append(w)
 
-    #number executions per project (card)
-    query = text("""select project, count (*)
-    from public.execution
-    where date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     titles = enginetest.execute(query)
     executionstest = []
     for y in titles:
         executionstest.append(y)
 
-    #number fails per project (card)
-    query2 = text("""select project, count (*)
-    from public.execution
-    where status='failed' and date_completed >= CURRENT_DATE
-    group by execution.project
-    """)
     faillist = enginetest.execute(query2)
     failurestest = []
     for k in faillist:
         failurestest.append(k)
 
-    #number fails per job for the week table
-    query3 = text("""
-    select project,job_name,status,count(*) from
-
-    (SELECT
-    exe.project,
-    se.job_name,
-    exe.status
-
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed >= CURRENT_DATE -6
-    ) as his
-
-    where status = 'failed'
-    group by status, job_name, project
-    order by count DESC
-    limit(10)
-    """)
     counts = enginetest.execute(query3)
     failcounttest = []
     for x in counts:
         failcounttest.append(x)
 
-    #finds the day with the most failures
-    query4 = text("""
-    select date_completed, count(*)
-    from (
-    select CAST(date_completed as date)
-    from public.execution
-    where status = 'failed' 
-    and date_completed >= CURRENT_DATE - 6
-    group by execution.date_completed
-    )as x
-    group by x.date_completed
-    order by count desc
-    """)
     days = enginetest.execute(query4)
     weektest = []
     for k in days:
@@ -435,17 +297,6 @@ def test():
 
     lengthtest = len(weektest)
 
-    #shows currently running jobs
-    query6 = text("""
-    SELECT 
-        cast(exe.date_started as varchar(16)),
-        exe.project,
-        se.job_name
-    FROM public.scheduled_execution se
-    join public.execution exe on exe.scheduled_execution_id=se.id
-    where exe.date_completed is null
-    order by date_started desc
-    """)
     ongoing = enginetest.execute(query6)
     runningtest = []
     for y in ongoing:
