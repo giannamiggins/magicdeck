@@ -101,18 +101,20 @@
       <!-- row of charts after-->
       <!-- Example DataTables Card-->
     <div class="row">
-      <div class="col-lg-10">
+      <div class="col-lg-12">
       <div class="card mb-3">
         <div class="card-header">
           <i class="fa fa-table"></i>   Hambot Runs</div>
         <div class="card-body">
             <table class="table table-bordered" width="100%" cellspacing="0">
+              <col width="50">
+              <col width="40">
               <col width="100">
-              <col width="70">
-              <col width="100">
               <col width="50">
               <col width="50">
-              <col width="50">
+              <col width="80">
+              <col width="80">
+              <col width="80">
               <thead>
                 <tr>
                   <th>Manifest</th>
@@ -120,6 +122,8 @@
                   <th>Status</th>
                   <th>Environment</th>
                   <th>Difference</th>
+                  <th>Warning Threshold</th>
+                  <th>Failure Threshold</th>
                   <th>Time</th>
                 </tr>
               </thead>
@@ -132,6 +136,8 @@
                   <td>{{ x[3] }}</td>
                   <td>{{ x[4] }}</td>
                   <td>{{ x[5] }}</td>
+                  <td>{{ x[6] }}</td>
+                  <td>{{ x[7] }}</td>
                 </tr>
                 {% endfor %}
               </tbody>

@@ -78,7 +78,7 @@ query6 = text("""
 @app.route('/dashboard/hambot')
 def hambot():
     engine = create_engine(credentials.hambot, echo=False)
-    query = text("""select manifest, test, status, environment, diff, cast(created_time as varchar(16))
+    query = text("""select manifest, test, status, environment, diff, warning_threshold, failure_threshold, cast(created_time as varchar(16))
     from public.hambot_history
     where status != 'success'
     and created_time >= current_date""")
@@ -91,6 +91,7 @@ def hambot():
         count(*)
         FROM public.hambot_history
         where status = 'failure'
+        and created_time >= current_date
         group by manifest
         order by count desc""")
     fcards = []
@@ -102,6 +103,7 @@ def hambot():
         count(*)
         FROM public.hambot_history
         where status = 'warning'
+        and created_time >= current_date
         group by manifest
         order by count desc""")
     wcards = []
