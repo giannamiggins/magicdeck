@@ -59,6 +59,7 @@ $ flask run
 
 ## Optional Hambot Dashboard
 add hambot database connection to credentials file
+
 ```
 hambot = 'postgresql://username:password@host/databasename'
 ```
