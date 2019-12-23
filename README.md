@@ -8,9 +8,9 @@ Uses Rundeck database to visually display live updates on failed jobs
 
 What things you need to install the software.
 
-* Git
-* Python
-* Pip
+*   Git
+*   Python
+*   Pip
 
 ## Install
 
@@ -66,6 +66,6 @@ hambot = 'postgresql://username:password@host/databasename'
 if you do not want to use this feature, simply leave out the hambot connection and the app will still run
 
 ## Built With
-* [Python](https://www.python.org/) - an interpreted, high-level, general-purpose programming language
-* [Flask](http://flask.pocoo.org/) - a micro web framework written in Python based on Werkzeug and Jinja2 
-* [PostgreSQL](https://www.postgresql.org/) - the world's most advanced open source relational database
+*   [Python](https://www.python.org/) - an interpreted, high-level, general-purpose programming language
+*   [Flask](http://flask.pocoo.org/) - a micro web framework written in Python based on Werkzeug and Jinja2 
+*   [PostgreSQL](https://www.postgresql.org/) - the world's most advanced open source relational database
