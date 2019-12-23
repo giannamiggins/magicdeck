@@ -1,4 +1,5 @@
 # Flask Rundeck Dashboard
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4231a53e906e42f0b52caa5cb054eacd)](https://www.codacy.com/manual/giannamiggins/magicdeck?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=giannamiggins/magicdeck&amp;utm_campaign=Badge_Grade)
 
 Uses Rundeck database to visually display live updates on failed jobs
 
