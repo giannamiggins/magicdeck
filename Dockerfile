@@ -1,5 +1,4 @@
 FROM centos:7
-MAINTAINER Will Liu <will.liu@equinox.com>
 
 WORKDIR /usr/local/magicdeck
 
@@ -25,7 +24,7 @@ WORKDIR /usr/local/magicdeck
     ARG git_password
 
 # copy project
-    ADD . /usr/local/magicdeck
+    COPY . /usr/local/magicdeck
 
 # install requirements
     RUN echo https://$git_username:$git_password@bitbucket.org > /root/.git-credentials  && \

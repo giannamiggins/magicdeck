@@ -86,8 +86,8 @@ def hambot():
     where status != 'success'
     and created_time >= current_date""")
     table = []
-    all = engine.execute(query)
-    for x in all:
+    hambot_data = engine.execute(query)
+    for x in hambot_data:
         table.append(x)
 
     query2 = text("""SELECT manifest,
@@ -338,4 +338,4 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
