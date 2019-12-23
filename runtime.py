@@ -23,13 +23,13 @@ numprojects = 0
 i = 0
 j = 0
 while i < len(timing)-1:
-    summ=0
+    summ = 0
     count = 0
     avg = 0
     while timing[i][1] == timing[i+1][1] and i < len(timing)-2:
         summ += timing[i][2].total_seconds()
         count += 1
-        i+=1
+        i += 1
     summ += timing[i][2].total_seconds()
     avg = summ / (count + 1)
     avgtable.append([timing[i][1], avg])
@@ -59,15 +59,15 @@ for g in weekcheck:
             if g[2].total_seconds() > m[1]*5:
                 toolong.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
-over = 1 
-j=0  
+over = 1
+j = 0
 while j < len(toolong) - 1:
     if toolong[j][1] != toolong[j+1][1]:
         over += 1
     j += 1
-if len(toolong)==0:
+if len(toolong) == 0:
     over = 0
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 engineqa = create_engine(credentials.qaurl, echo=False)
 timesqa = engineqa.execute(query)
@@ -79,13 +79,13 @@ numprojects = 0
 i = 0
 j = 0
 while i < len(timingqa)-1:
-    summ=0
+    summ = 0
     count = 0
     avg = 0
     while timingqa[i][1] == timingqa[i+1][1] and i < len(timingqa)-2:
         summ += timingqa[i][2].total_seconds()
         count += 1
-        i+=1
+        i += 1
     summ += timingqa[i][2].total_seconds()
     avg = summ / (count + 1)
     avgtableqa.append([timingqa[i][1], avg])
@@ -104,15 +104,15 @@ for g in weekcheckqa:
             if g[2].total_seconds() > m[1]*5:
                 toolongqa.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
-overqa = 1 
-j=0  
+overqa = 1
+j = 0
 while j < len(toolongqa) - 1:
     if toolongqa[j][1] != toolongqa[j+1][1]:
         overqa += 1
     j += 1
-if len(toolongqa)==0:
+if len(toolongqa) == 0:
     overqa = 0
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 enginestag = create_engine(credentials.stagurl, echo=False)
 timesstag = enginestag.execute(query)
@@ -124,13 +124,13 @@ numprojects = 0
 i = 0
 j = 0
 while i < len(timingstag)-1:
-    summ=0
+    summ = 0
     count = 0
     avg = 0
     while timingstag[i][1] == timingstag[i+1][1] and i < len(timingstag)-2:
         summ += timingstag[i][2].total_seconds()
         count += 1
-        i+=1
+        i += 1
     summ += timingstag[i][2].total_seconds()
     avg = summ / (count + 1)
     avgtablestag.append([timingstag[i][1], avg])
@@ -149,15 +149,15 @@ for g in weekcheckstag:
             if g[2].total_seconds() > m[1]*5:
                 toolongstag.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
-overstag = 1 
-j=0  
+overstag = 1
+j = 0
 while j < len(toolongstag) - 1:
     if toolongstag[j][1] != toolongstag[j+1][1]:
         overstag += 1
     j += 1
-if len(toolongstag)==0:
+if len(toolongstag) == 0:
     overstag = 0
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 enginetest = create_engine(credentials.testurl, echo=False)
 timestest = enginetest.execute(query)
@@ -169,13 +169,13 @@ numprojects = 0
 i = 0
 j = 0
 while i < len(timingtest)-1:
-    summ=0
+    summ = 0
     count = 0
     avg = 0
     while timingtest[i][1] == timingtest[i+1][1] and i < len(timingtest)-2:
         summ += timingtest[i][2].total_seconds()
         count += 1
-        i+=1
+        i += 1
     summ += timingtest[i][2].total_seconds()
     avg = summ / (count + 1)
     avgtabletest.append([timingtest[i][1], avg])
@@ -194,11 +194,11 @@ for g in weekchecktest:
             if g[2].total_seconds() > m[1]*5:
                 toolongtest.append([g[0], m[0], g[3], round(g[2].total_seconds()), round(m[1], 1)])
 
-overtest = 1 
-j=0  
+overtest = 1
+j = 0
 while j < len(toolongtest) - 1:
     if toolongtest[j][1] != toolongtest[j+1][1]:
         overtest += 1
     j += 1
-if len(toolongtest)==0:
+if len(toolongtest) == 0:
     overtest = 0

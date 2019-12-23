@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from sqlalchemy import create_engine, text
 import credentials
-from runtime import toolong, over, toolongqa, overqa, toolongstag, overstag, toolongtest, overtest
+from runtime import (toolong, over, toolongqa, overqa, toolongstag, overstag,
+                     toolongtest, overtest)
 
 app = Flask(__name__)
 
-#recently failed jobs table
+# recently failed jobs table
 query1 = text("""
     SELECT
     exe.project,
@@ -18,19 +19,19 @@ query1 = text("""
     where exe.status='failed'
     order by exe.date_completed desc
     limit 10 """)
-#number executions per project (card)
+# number executions per project (card)
 query = text("""select project, count (*)
     from public.execution
     where date_completed >= CURRENT_DATE
     group by execution.project
     """)
- #number fails per project (card)
+# number fails per project (card)
 query2 = text("""select project, count (*)
     from public.execution
     where status='failed' and date_completed >= CURRENT_DATE
     group by execution.project
     """)
-#number fails per job for the week table
+# number fails per job for the week table
 query3 = text("""
     select project,job_name,status,count(*) from
 
@@ -49,13 +50,13 @@ query3 = text("""
     order by count DESC
     limit(10)
     """)
- #finds the day with the most failures
+# finds the day with the most failures
 query4 = text("""
     select date_completed, count(*)
     from (
     select CAST(date_completed as date)
     from public.execution
-    where status = 'failed' 
+    where status = 'failed'
     and date_completed >= CURRENT_DATE - 6
     group by execution.date_completed
     )as x
@@ -63,9 +64,9 @@ query4 = text("""
     order by count desc
     """)
 
-#shows currently running jobs
+# shows currently running jobs
 query6 = text("""
-    SELECT 
+    SELECT
         cast(exe.date_started as varchar(16)),
         exe.project,
         se.job_name
@@ -75,10 +76,12 @@ query6 = text("""
     order by date_started desc
     """)
 
+
 @app.route('/dashboard/hambot')
 def hambot():
     engine = create_engine(credentials.hambot, echo=False)
-    query = text("""select manifest, test, status, environment, diff, warning_threshold, failure_threshold, cast(created_time as varchar(16))
+    query = text("""select manifest, test, status, environment, diff, warning_threshold,
+    failure_threshold, cast(created_time as varchar(16))
     from public.hambot_history
     where status != 'success'
     and created_time >= current_date""")
@@ -115,18 +118,19 @@ def hambot():
     for a in fcards:
         for b in wcards:
             if a[0] == b[0]:
-                both.append([a,b])
+                both.append([a, b])
                 fcards.remove(a)
                 wcards.remove(b)
     for a in fcards:
         for b in wcards:
             if a[0] == b[0]:
-                both.append([a,b])
+                both.append([a, b])
                 fcards.remove(a)
                 wcards.remove(b)
 
+    return render_template('hambot.html', table=table, fcards=fcards,
+                           wcards=wcards, both=both)
 
-    return render_template('hambot.html', table=table, fcards=fcards, wcards=wcards, both=both)
 
 @app.route('/dashboard/prod')
 def dashboard():
@@ -163,7 +167,7 @@ def dashboard():
     for y in ongoing:
         running.append(y)
 
-    #build prod url
+    # build prod url
     g = 0
     host = "devops"
     while g < len(failures):
@@ -171,8 +175,12 @@ def dashboard():
         url = "http://{0}.equinoxfitness.com/rundeck/project/{1}/activity?statFilter=fail".format(host, project)
         failures[g] = failures[g], url
         g += 1
-        
-    return render_template('dashboard.html', over=over, toolong=toolong, engine=engine, titles=executions, job=job, counts=failcount, failures=failures, running=running, week=week, length=length)
+
+    return render_template('dashboard.html', over=over, toolong=toolong,
+                           engine=engine, titles=executions, job=job,
+                           counts=failcount, failures=failures,
+                           running=running, week=week, length=length)
+
 
 @app.route('/dashboard/qa')
 def qa():
@@ -210,7 +218,7 @@ def qa():
     for y in ongoing:
         runningqa.append(y)
 
-    #build qa url
+    # build qa url
     g = 0
     host = "qa-devops"
     while g < len(failuresqa):
@@ -219,7 +227,11 @@ def qa():
         failuresqa[g] = failuresqa[g], url
         g += 1
 
-    return render_template('qa.html', over=overqa, toolong=toolongqa, titles=executionsqa, job=jobqa, counts=failcountqa, failures=failuresqa, running=runningqa, week=weekqa, length=lengthqa)
+    return render_template('qa.html', over=overqa, toolong=toolongqa,
+                           titles=executionsqa, job=jobqa, counts=failcountqa,
+                           failures=failuresqa, running=runningqa, week=weekqa,
+                           length=lengthqa)
+
 
 @app.route('/dashboard/stag')
 def stag():
@@ -257,7 +269,7 @@ def stag():
     for y in ongoing:
         runningstag.append(y)
 
-    #build stag url
+    # build stag url
     g = 0
     host = "stag-devops"
     while g < len(failuresstag):
@@ -266,7 +278,12 @@ def stag():
         failuresstag[g] = failuresstag[g], url
         g += 1
 
-    return render_template('stag.html', over=overstag, toolong=toolongstag, titles=executionsstag, job=jobstag, counts=failcountstag, failures=failuresstag, running=runningstag, week=weekstag, length=lengthstag)
+    return render_template('stag.html', over=overstag, toolong=toolongstag,
+                           titles=executionsstag, job=jobstag,
+                           counts=failcountstag, failures=failuresstag,
+                           running=runningstag, week=weekstag,
+                           length=lengthstag)
+
 
 @app.route('/dashboard/test')
 def test():
@@ -304,7 +321,7 @@ def test():
     for y in ongoing:
         runningtest.append(y)
 
-    #build test url
+    # build test url
     g = 0
     host = "test-devops"
     while g < len(failurestest):
@@ -313,7 +330,12 @@ def test():
         failurestest[g] = failurestest[g], url
         g += 1
 
-    return render_template('test.html', over=overtest, toolong=toolongtest, titles=executionstest, job=jobtest, counts=failcounttest, failures=failurestest, running=runningtest, week=weektest, length=lengthtest)
+    return render_template('test.html', over=overtest, toolong=toolongtest,
+                           titles=executionstest, job=jobtest,
+                           counts=failcounttest, failures=failurestest,
+                           running=runningtest, week=weektest,
+                           length=lengthtest)
+
 
 if __name__ == '__main__':
-	app.run(debug=True)
+    app.run(debug=True)
