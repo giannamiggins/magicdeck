@@ -21,8 +21,6 @@ Clone the git repository on your computer
 $ git clone https://github.com/equinoxfitness/magicdeck.git
 ```
 
-You can also download the entire repository as a zip file and unpack in on your computer if you do not have git
-
 ## Virtual Environment
 create virtual environment named venv and activate
 ```
